@@ -4,7 +4,7 @@ const path = require('path');
 const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const ENTRY = 'src/index.ts';
+const ENTRY = 'src/index.tsx';
 const BUILD_DIR = 'dist';
 
 /**
@@ -20,11 +20,10 @@ module.exports = (env={}) => {
       path: path.join(__dirname, BUILD_DIR)
     },
     target: "web",
-
     module: {
       rules: [
         // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-        { test: /\.ts?$/, loader: "awesome-typescript-loader" },
+        { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
         { test: /\.pug/, loaders: ['html-loader', 'pug-html-loader'] },
         {
           test: /\.scss$/,
@@ -37,6 +36,7 @@ module.exports = (env={}) => {
       ]
     },
     resolve: {
+      extensions: ['.ts', '.tsx', '.js'],
       alias: {
         "~" : path.join(__dirname)
       }
