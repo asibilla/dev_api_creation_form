@@ -23,9 +23,18 @@ module.exports = (env={}) => {
 
     module: {
       rules: [
-            // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
-            { test: /\.ts?$/, loader: "awesome-typescript-loader" }
-        ]
+        // All files with a '.ts' or '.tsx' extension will be handled by 'awesome-typescript-loader'.
+        { test: /\.ts?$/, loader: "awesome-typescript-loader" },
+        { test: /\.pug/, loaders: ['html-loader', 'pug-html-loader'] },
+        {
+          test: /\.scss$/,
+          use: [
+            { loader: "style-loader" },
+            { loader: "css-loader" },
+            { loader: "sass-loader" }
+          ]
+        }
+      ]
     },
     resolve: {
       alias: {
