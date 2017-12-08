@@ -14,14 +14,18 @@ export class CreateDatabase extends React.Component<null, state> {
     this.state = {
       dbName : ''
     }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  private handleSubmit() {
-
+  private handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    console.log('the value', this.state.dbName);
+    event.preventDefault();
   }
 
-  private handleChange() {
-
+  private handleChange(event: React.FormEvent<HTMLInputElement>) {
+    this.setState({dbName: event.currentTarget.value});
   }
 
   render() {
