@@ -9,6 +9,7 @@ export class Menu extends React.Component<{},{}> {
       <menu>
         <Link to="/">Home</Link>
         <Link to="/create-database">Create A Database</Link>
+        <Link to="/create-document">Create A Document</Link>
       </menu>
     );
   }
