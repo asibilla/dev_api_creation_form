@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { DBService } from '../scripts/dbService';
 import { serverHost } from '../scripts/config';
 import axios from 'axios';
 
@@ -7,6 +8,7 @@ interface state extends React.ComponentState {
 }
 
 export class ShowDatabases extends React.Component<null, state> {
+  private dbService: DBService = new DBService();
 
   constructor(props:any = {}, context?:any) {
     super(props);
