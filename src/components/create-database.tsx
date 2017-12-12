@@ -1,31 +1,54 @@
 import * as React from 'react';
-import axios from 'axios';
 import { ShowDatabases } from './show-databases';
+import { DBService } from '../scripts/dbService';
+import { setStateValue } from '../scripts/utility';
 
-interface state {
-  dbName: string;
+interface State {
+  dbName: string,
+  refreshDBList: boolean
 }
 
-export class CreateDatabase extends React.Component<null, state> {
+export class CreateDatabase extends React.Component<null, State> {
+  private dbService: DBService = new DBService();
+  private setStateValue = setStateValue.bind(this);
 
   constructor(props:any = {}, context?:any) {
     super(props);
 
     this.state = {
-      dbName : ''
+      dbName : '',
+      refreshDBList: false
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  private get dbName(): string {
+    return this.state.dbName;
+  }
+
+  private get refreshDBList(): boolean {
+    return this.state.refreshDBList;
+  }
+
   private handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    console.log('the value', this.state.dbName);
-    event.preventDefault();
+    event.preventDefault()
+    this.setStateValue('refreshDBList', false);;
+
+    this.dbService.createDB(this.dbName)
+      .then(response => {
+        this.setStateValue('refreshDBList', true);
+        this.setStateValue('dbName', '');
+      })
+      .catch(e => {
+        // TODO: Create error state. Could not put database.
+      }
+    );
   }
 
   private handleChange(event: React.FormEvent<HTMLInputElement>) {
-    this.setState({dbName: event.currentTarget.value});
+    this.setStateValue('dbName', event.currentTarget.value);
   }
 
   render() {
@@ -36,12 +59,12 @@ export class CreateDatabase extends React.Component<null, state> {
         <form onSubmit={this.handleSubmit}>
           <label>
             Name:
-            <input type="text" value={this.state.dbName} onChange={this.handleChange} />
+            <input type="text" value={this.dbName} onChange={this.handleChange} />
           </label>
           <input type="submit" value="Submit" />
         </form>
         <div className="current-dbs">
-          <ShowDatabases />
+          <ShowDatabases refresh={this.refreshDBList} />
         </div>
       </div>
     );

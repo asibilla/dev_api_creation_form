@@ -1,20 +1,43 @@
 import * as React from 'react';
 import { DBService } from '../scripts/dbService';
-import { serverHost } from '../scripts/config';
-import axios from 'axios';
+import { setStateValue } from '../scripts/utility';
 
-interface state extends React.ComponentState {
+interface State extends React.ComponentState {
   dbs: string[];
+  refresh: boolean
 }
 
-export class ShowDatabases extends React.Component<null, state> {
-  private dbService: DBService = new DBService();
+interface Props {
+  refresh: boolean
+}
 
-  constructor(props:any = {}, context?:any) {
-    super(props);
+export class ShowDatabases extends React.Component<Props, State> {
+  private dbService: DBService = new DBService();
+  private setStateValue = setStateValue.bind(this);
+
+  constructor(props: Props) {
+    super(props as Props);
 
     this.state = {
-      dbs: []
+      dbs: [],
+      refresh: false
+    }
+  }
+
+  private get refresh(): boolean {
+    return this.state.refresh;
+  }
+
+  private get dbs(): string[] {
+    return this.state.dbs;
+  }
+
+  componentWillReceiveProps() {
+    if (this.refresh !== this.props.refresh) {
+      this.setStateValue('refresh', this.props.refresh);
+      if (this.props.refresh) {
+        this.getDbs();
+      }
     }
   }
 
@@ -23,22 +46,22 @@ export class ShowDatabases extends React.Component<null, state> {
   }
 
   getDbs(): void {
-    axios.get(serverHost + 'api?db=_all_dbs').then(response => {
+    this.dbService.getDB('_all_dbs').then(response => {
       let dbArray = response.data.filter((v: string) => !/^_/.test(v));
-      this.setState(prevState => {
-        return { dbs: dbArray }
-      });
+      this.setStateValue('dbs', dbArray);
+    })
+    .catch(e => {
+      //TODO: add fail state.
     });
   }
 
   render() {
-
     return (
       <div className="create-database">
         <h1>Current Databases</h1>
         <ul>
           {
-            this.state.dbs.map(db => <li key={db}>{db}</li>)
+            this.dbs.map(db => <li key={db}>{db}</li>)
           }
         </ul>
       </div>

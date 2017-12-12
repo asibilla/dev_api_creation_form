@@ -7,8 +7,12 @@ export class DBService {
 
   constructor() {}
 
-  getDB(dbName: string) {
+  getDB(dbName: string): Promise<any> {
+    return axios.get(this.baseUrl + '?db=' + dbName);
+  }
 
+  createDB(dbName: string): Promise<any> {
+    return axios.post(this.baseUrl + '?db=' + dbName + '&action=post');
   }
 }
 
