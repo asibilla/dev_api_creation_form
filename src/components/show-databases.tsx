@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DBService } from '../scripts/dbService';
+import { getDB } from '../scripts/dbService';
 import { setStateValue } from '../scripts/utility';
 
 interface State extends React.ComponentState {
@@ -12,7 +12,6 @@ interface Props {
 }
 
 export class ShowDatabases extends React.Component<Props, State> {
-  private dbService: DBService = new DBService();
   private setStateValue = setStateValue.bind(this);
 
   constructor(props: Props) {
@@ -45,12 +44,12 @@ export class ShowDatabases extends React.Component<Props, State> {
     this.getDbs();
   }
 
-  getDbs(): void {
-    this.dbService.getDB('_all_dbs').then(response => {
+  private getDbs(): void {
+    getDB('_all_dbs').then((response: any) => {
       let dbArray = response.data.filter((v: string) => !/^_/.test(v));
       this.setStateValue('dbs', dbArray);
     })
-    .catch(e => {
+    .catch((e: any) => {
       //TODO: add fail state.
     });
   }

@@ -1,3 +1,4 @@
-export const serverHost = 'http://localhost:4000/';
-export const endpoint = 'api/';
+const serverHost = 'http://localhost:4000/';
+const endpoint = 'api/';
 
+export { serverHost, endpoint };

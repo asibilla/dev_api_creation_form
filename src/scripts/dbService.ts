@@ -1,18 +1,14 @@
 import { serverHost, endpoint } from '../scripts/config';
 import axios from 'axios';
 
+const baseUrl = serverHost + endpoint;
 
-export class DBService {
-  private baseUrl: string = serverHost + endpoint;
-
-  constructor() {}
-
-  getDB(dbName: string): Promise<any> {
-    return axios.get(this.baseUrl + '?db=' + dbName);
-  }
-
-  createDB(dbName: string): Promise<any> {
-    return axios.post(this.baseUrl + '?db=' + dbName + '&action=post');
-  }
+function getDB(dbName: string): any {
+  return axios.get(baseUrl + '?db=' + dbName);
 }
 
+function createDB(dbName: string): any {
+  return axios.post(baseUrl + '?db=' + dbName + '&action=post');
+}
+
+export { getDB, createDB };

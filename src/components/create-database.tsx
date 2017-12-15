@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ShowDatabases } from './show-databases';
-import { DBService } from '../scripts/dbService';
+import { createDB } from '../scripts/dbService';
 import { setStateValue } from '../scripts/utility';
 
 interface State {
@@ -9,7 +9,6 @@ interface State {
 }
 
 export class CreateDatabase extends React.Component<null, State> {
-  private dbService: DBService = new DBService();
   private setStateValue = setStateValue.bind(this);
 
   constructor(props:any = {}, context?:any) {
@@ -32,22 +31,22 @@ export class CreateDatabase extends React.Component<null, State> {
     return this.state.refreshDBList;
   }
 
-  private handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  private handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
     event.preventDefault()
     this.setStateValue('refreshDBList', false);;
 
-    this.dbService.createDB(this.dbName)
-      .then(response => {
+    createDB(this.dbName)
+      .then((response: any) => {
         this.setStateValue('refreshDBList', true);
         this.setStateValue('dbName', '');
       })
-      .catch(e => {
+      .catch((e: any) => {
         // TODO: Create error state. Could not put database.
       }
     );
   }
 
-  private handleChange(event: React.FormEvent<HTMLInputElement>) {
+  private handleChange(event: React.FormEvent<HTMLInputElement>): void {
     this.setStateValue('dbName', event.currentTarget.value);
   }
 
