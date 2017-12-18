@@ -3,8 +3,12 @@ import axios from 'axios';
 
 const baseUrl = serverHost + endpoint;
 
-function getDB(dbName: string): any {
-  return axios.get(baseUrl + '?db=' + dbName);
+function getDB(dbName: string, docName: string = null): any {
+  let url = baseUrl + '?db=' + dbName;
+  if (docName) {
+    url += '&doc=' + docName;
+  }
+  return axios.get(url);
 }
 
 function createDB(dbName: string): any {

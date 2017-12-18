@@ -4,8 +4,8 @@ import { createDB } from '../scripts/dbService';
 import { setStateValue } from '../scripts/utility';
 
 interface State {
-  dbName: string,
-  refreshDBList: boolean
+  dbName: string;
+  refreshDBList: boolean;
 }
 
 export class CreateDatabase extends React.Component<null, State> {
