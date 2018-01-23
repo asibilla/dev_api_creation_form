@@ -20,7 +20,7 @@ export class CreateDocument extends React.Component<{},State> {
       selectedDb: ''
     }
 
-    this.handleChange = this.handleChange.bind(this);
+    //this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -31,8 +31,7 @@ export class CreateDocument extends React.Component<{},State> {
   private getDbs(): void {
     getDB('_all_dbs')
       .then((response: any) => {
-        let dbArray = response.data.filter((v: string) => !/^_/.test(v));
-        this.setStateValue('dbs', dbArray);
+        this.setStateValue('dbs', response);
       })
       .catch((e: any) => {
         //TODO: add fail state.
@@ -41,7 +40,8 @@ export class CreateDocument extends React.Component<{},State> {
   }
 
   private getSelectedDB(dbName: string): void {
-    getDB(dbName, '_all_docs')
+    //getDB(dbName, 'c44a55a873430c3557fc161d04000328')
+    getDB(dbName, '_all_docs', {'attachments': true,'include_docs': true})
       .then((response:any) => {
         console.log('response from server', response);
       })
@@ -66,26 +66,31 @@ export class CreateDocument extends React.Component<{},State> {
     // );
   }
 
-  private handleChange(event: React.FormEvent<HTMLSelectElement>): void {
-    this.setStateValue('selectedDb', event.currentTarget.value);
-    this.getSelectedDB(event.currentTarget.value);
+  private handleChange(event: React.FormEvent<HTMLSelectElement|HTMLTextAreaElement>): void {
+
+    if (event.currentTarget instanceof HTMLSelectElement) {
+      this.setStateValue('selectedDb', event.currentTarget.value);
+      this.getSelectedDB(event.currentTarget.value);
+    }
   }
 
   render() {
 
     return (
       <div className="create-document">
+        <section>
         <h1>Create a Document</h1>
-        <form onSubmit={this.handleSubmit}>
-        <label>Select a database</label>
-        <select value={this.state.selectedDb} onChange={this.handleChange}>
-        <option value=''>Select</option>
-          {
-            this.state.dbs.map(db => <option key={db} value={db}>{db}</option>)
-          }
-
-        </select>
-        </form>
+          <form onSubmit={this.handleSubmit}>
+            <select value={this.state.selectedDb} onChange={this.handleChange.bind(this)}>
+            <option value=''>select a database</option>
+              {
+                this.state.dbs.map(db => <option key={db} value={db}>{db}</option>)
+              }
+            </select>
+            <textarea value="" placeholder="enter data to store to db"></textarea>
+            <input type="submit" value="save to database" />
+          </form>
+        </section>
       </div>
     );
   }

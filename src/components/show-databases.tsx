@@ -38,8 +38,7 @@ export class ShowDatabases extends React.Component<Props, State> {
 
   private getDbs(): void {
     getDB('_all_dbs').then((response: any) => {
-      let dbArray = response.data.filter((v: string) => !/^_/.test(v));
-      this.setStateValue('dbs', dbArray);
+      this.setStateValue('dbs', response);
     })
     .catch((e: any) => {
       //TODO: add fail state.
