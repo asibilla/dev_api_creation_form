@@ -17,7 +17,13 @@ module.exports = (env={}) => {
     entry: [path.join(__dirname, ENTRY)],
     output: {
       filename: "index.js",
-      path: path.join(__dirname, BUILD_DIR)
+      path: path.join(__dirname, BUILD_DIR),
+      publicPath: '/'
+    },
+    devServer: {
+      historyApiFallback:{
+          index:'/index.html'
+      },
     },
     target: "web",
     module: {
@@ -46,10 +52,6 @@ module.exports = (env={}) => {
         host: 'localhost',
         port: 3000,
         proxy: 'http://localhost:8080/'
-      }),
-      new HtmlWebpackPlugin({
-        title: 'App Title',
-        template: path.join(__dirname, 'src/index.html'),
       })
     ]
   };
