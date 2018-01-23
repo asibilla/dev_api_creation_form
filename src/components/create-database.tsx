@@ -53,18 +53,17 @@ export class CreateDatabase extends React.Component<null, State> {
   render() {
 
     return (
-      <div className="create-database">
-        <h1>Create a Database</h1>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input type="text" value={this.dbName} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-        <div className="current-dbs">
+      <div>
+        <section className="create-database">
+          <h1>Create a Database</h1>
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" value={this.dbName} onChange={this.handleChange} placeholder="enter db name" />
+            <input type="submit" value="Submit" />
+          </form>
+        </section>
+        <section className="current-dbs">
           <ShowDatabases refresh={this.refreshDBList} />
-        </div>
+        </section>
       </div>
     );
   }
