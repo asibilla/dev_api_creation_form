@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { getDB } from '../scripts/dbService';
+import { getDB, ResponseItem } from '../scripts/dbService';
 import { setStateValue } from '../scripts/utility';
 
 interface State extends React.ComponentState {
-  dbs: string[];
+  dbs: ResponseItem[];
   refresh: boolean;
 }
 
@@ -37,7 +37,7 @@ export class ShowDatabases extends React.Component<Props, State> {
   }
 
   private getDbs(): void {
-    getDB('_all_dbs').then((response: any) => {
+    getDB('_all_dbs').then((response: ResponseItem[]) => {
       this.setStateValue('dbs', response);
     })
     .catch((e: any) => {
@@ -51,7 +51,7 @@ export class ShowDatabases extends React.Component<Props, State> {
         <h1>Current Databases</h1>
         <ul>
           {
-            this.state.dbs.map(db => <li key={db}>{db}</li>)
+            this.state.dbs.map((db: ResponseItem) => <li key={db.id}>{db.value}</li>)
           }
         </ul>
       </div>
