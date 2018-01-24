@@ -43,7 +43,7 @@ export class CreateDocument extends React.Component<{},State> {
     //getDB(dbName, 'c44a55a873430c3557fc161d04000328')
     getDB(dbName, '_all_docs', {'attachments': true,'include_docs': true})
       .then((response:any) => {
-        console.log('response from server', response);
+
       })
       .catch((e: any) => {
         //TODO: add fail state.
