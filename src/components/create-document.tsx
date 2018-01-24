@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { setStateValue } from '../scripts/utility';
-import { getDB } from '../scripts/dbService';
+import { getDB, ResponseItem } from '../scripts/dbService';
 
 interface State extends React.ComponentState {
-  dbs: string[];
+  dbs: ResponseItem[];
   selectedDb: string;
 }
 
@@ -84,7 +84,7 @@ export class CreateDocument extends React.Component<{},State> {
             <select value={this.state.selectedDb} onChange={this.handleChange.bind(this)}>
             <option value=''>select a database</option>
               {
-                this.state.dbs.map(db => <option key={db} value={db}>{db}</option>)
+                this.state.dbs.map((db: ResponseItem) => <option key={db.id} value={db.value}>{db.value}</option>)
               }
             </select>
             <textarea value="" placeholder="enter data to store to db"></textarea>

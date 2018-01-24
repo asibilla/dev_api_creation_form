@@ -5,58 +5,31 @@ const baseUrl = serverHost + endpoint;
 const privateEntry = /^_/;
 
 class Response {
-  public data: any[];
+  public data: ResponseItem[] = [];
 
   constructor(
-    response: any = {},
-    private hasDocs: boolean = false
+    private response: any
   ) {
-    if (!response.data) {
-      this.data = [];
-    }
-    else {
-      this.parseData(response.data);
-    }
-  }
-
-  private parseData(data: any) {
-    if (!this.hasDocs) {
-      this.data = data.filter((v: string) => !privateEntry.test(v));
-    }
-    else if (data.rows) {
-      let rows = <Document[]>data.rows.map((v: any) => new Document(v)).filter((v: Document) => !privateEntry.test(v.id));
-      this.data = rows;
-    }
-    else {
-      this.data = [new Document(data)];
+    if (response && Array.isArray(response)) {
+      this.data = response.map((v: any) => new ResponseItem(v));
     }
   }
 }
 
-class Document {
+class ResponseItem {
   constructor(
-    private sourceObject: any = {}
+    private item: any = {},
   ) {}
 
   public get id() {
-    return this.sourceObject.id || '';
+    return this.item.id || '';
   }
-  public get value() {
-    if (!this.sourceObject.doc) {
-      return {};
-    }
-    else {
-      let value: any = {};
-      for (let key in this.sourceObject.doc) {
-        if (!privateEntry.test(key)) {
-          value[key] = this.sourceObject.doc[key];
-        }
-      }
-      return value;
-    }
 
+  public get value() {
+    return this.item.value || {};
   }
 }
+
 
 // TODO: create options class w/ available query params,
 function getDB(dbName: string, docName: string = null, options: any = null): Promise<any> {
@@ -74,9 +47,8 @@ function getDB(dbName: string, docName: string = null, options: any = null): Pro
 
     axios.get(url)
       .then(response => {
-        let validResponse = new Response(response, (docName) ? true : false);
-        console.log(validResponse);
-        resolve(validResponse.data);
+        let validatedResponse = new Response(response.data);
+        resolve(validatedResponse.data);
       })
       .catch(e => {
         reject(e);
@@ -89,4 +61,4 @@ function createDB(dbName: string): any {
   return axios.post(baseUrl + '?db=' + dbName + '&action=post');
 }
 
-export { getDB, createDB };
+export { getDB, createDB, ResponseItem };
